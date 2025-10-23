@@ -1,37 +1,50 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>✦ 山海工坊 · MYCRAFT ✦</title>
-  <meta name="description" content="山水像素风的 Minecraft 服务器主页：展示地址、状态、加入方式与联系信息。" />
-
-  <!-- 像素/游戏风英文字体（可选）：国内若加载慢会自动回退到系统字体 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-
-  <link rel="stylesheet" href="style.css" />
-  <meta property="og:title" content="山海工坊 · MYCRAFT" />
-  <meta property="og:description" content="松风入墨，方寸山海。加入我们的 Minecraft 世界！" />
-  <meta property="og:image" content="assets/cover.png" />
+  <meta name="description" content="东方幻想·山水像素风的 Minecraft 服务器主页（豪华动态版）。"/>
+  <!-- 可选像素英文字体，国内慢时会回退系统字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- 背景层：像素山水/云/粒子（全部在 CSS 中绘制） -->
-  <div class="bg" aria-hidden="true"></div>
+  <!-- 背景：Canvas 星雾 + 视差山体层 -->
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="parallax" aria-hidden="true">
+    <div class="layer far"></div>
+    <div class="layer mid"></div>
+    <div class="layer near"></div>
+  </div>
 
   <header class="hero" role="banner">
-    <h1 class="logo" title="山海工坊 · MYCRAFT">✦ 山海工坊 · MYCRAFT ✦</h1>
+    <h1 class="logo" title="山海工坊 · MYCRAFT">
+      <span class="glow">山海工坊</span>
+      <span class="dot">·</span>
+      <span class="glow">MYCRAFT</span>
+    </h1>
     <p class="subtitle">松风入墨 · 方寸山海 · 东方幻想像素世界</p>
 
-    <!-- 服务器卡片（改 data-host / data-port / data-map 即可） -->
-    <section class="card server-card" aria-labelledby="serverInfo"
-      data-host="play.yourserver.net" data-port="25565" data-map="8123">
+    <!-- 特效开关（性能友好） -->
+    <label class="toggle fx">
+      <input id="fxToggle" type="checkbox" checked/>
+      <span>特效 ON</span>
+    </label>
+
+    <!-- 服务器卡片（在 data-* 改成你的） -->
+    <section class="card server-card"
+      data-host="play.yourserver.net"
+      data-port="25565"
+      data-map="8123"
+      aria-labelledby="serverInfo">
       <h2 id="serverInfo" class="sr-only">服务器信息</h2>
 
       <div class="row">
         <span class="label">地址</span>
-        <span id="addr" class="mono" aria-live="polite">play.yourserver.net:25565</span>
+        <span id="addr" class="mono addr">play.yourserver.net:25565</span>
         <button id="copyBtn" class="btn glow" aria-label="复制服务器地址">复制</button>
       </div>
 
@@ -43,9 +56,9 @@
       <div class="row status">
         <span class="label">状态</span>
         <span id="statusDot" class="dot off" aria-hidden="true"></span>
-        <span id="statusText" class="status-text" aria-live="polite">检测中…</span>
+        <span id="statusText" class="status-text">检测中…</span>
         <span id="playerCount" class="pill mono" aria-label="在线人数">--/--</span>
-        <button id="refreshBtn" class="btn ghost" aria-label="刷新状态">刷新</button>
+        <button id="refreshBtn" class="btn ghost">刷新</button>
       </div>
 
       <div class="row actions">
@@ -60,25 +73,25 @@
   </header>
 
   <main id="main">
-    <section id="features" class="section">
+    <section id="features" class="section fade-in">
       <h2 class="section-title">服务器特色</h2>
       <div class="grid features">
-        <article class="feature" aria-label="轻量模组">
+        <article class="feature">
           <div class="pixel-icon bamboo" aria-hidden="true"></div>
           <h3>轻量模组</h3>
           <p>保留原版风味，适度增强体验：性能优化、便捷工具、装饰内容。</p>
         </article>
-        <article class="feature" aria-label="经济与商店">
+        <article class="feature">
           <div class="pixel-icon scroll" aria-hidden="true"></div>
           <h3>经济与商店</h3>
           <p>玩家驱动经济体系，摆摊、拍卖与商店一应俱全。</p>
         </article>
-        <article class="feature" aria-label="公平与安全">
+        <article class="feature">
           <div class="pixel-icon shield" aria-hidden="true"></div>
           <h3>公平与安全</h3>
           <p>白名单与审核机制，反作弊插件护航，环境干净友好。</p>
         </article>
-        <article class="feature" aria-label="在线地图">
+        <article class="feature">
           <div class="pixel-icon cloud" aria-hidden="true"></div>
           <h3>在线地图</h3>
           <p>支持 BlueMap，一键查看建筑与地标（可选）。</p>
@@ -86,7 +99,7 @@
       </div>
     </section>
 
-    <section id="join" class="section">
+    <section id="join" class="section fade-in">
       <h2 class="section-title">如何加入</h2>
       <ol class="steps">
         <li>使用 <b>Minecraft Java 1.20.1</b>（与服务器版本一致）。</li>
@@ -99,20 +112,19 @@
       </div>
     </section>
 
-    <section id="gallery" class="section">
+    <section id="gallery" class="section fade-in">
       <h2 class="section-title">截图展示</h2>
       <div class="grid gallery">
-        <!-- 使用占位图，之后可替换为你自己的图片 -->
-        <img src="https://picsum.photos/seed/mc1/640/360" alt="玩家建筑示意图1" />
-        <img src="https://picsum.photos/seed/mc2/640/360" alt="玩家建筑示意图2" />
-        <img src="https://picsum.photos/seed/mc3/640/360" alt="玩家建筑示意图3" />
-        <img src="https://picsum.photos/seed/mc4/640/360" alt="玩家建筑示意图4" />
-        <img src="https://picsum.photos/seed/mc5/640/360" alt="玩家建筑示意图5" />
-        <img src="https://picsum.photos/seed/mc6/640/360" alt="玩家建筑示意图6" />
+        <img src="https://picsum.photos/seed/mc1/640/360" alt="玩家建筑示意图1"/>
+        <img src="https://picsum.photos/seed/mc2/640/360" alt="玩家建筑示意图2"/>
+        <img src="https://picsum.photos/seed/mc3/640/360" alt="玩家建筑示意图3"/>
+        <img src="https://picsum.photos/seed/mc4/640/360" alt="玩家建筑示意图4"/>
+        <img src="https://picsum.photos/seed/mc5/640/360" alt="玩家建筑示意图5"/>
+        <img src="https://picsum.photos/seed/mc6/640/360" alt="玩家建筑示意图6"/>
       </div>
     </section>
 
-    <section id="rules" class="section">
+    <section id="rules" class="section fade-in">
       <h2 class="section-title">服务器规则</h2>
       <div class="card rulebook">
         <ul>
@@ -125,7 +137,7 @@
       </div>
     </section>
 
-    <section id="contact" class="section">
+    <section id="contact" class="section fade-in">
       <h2 class="section-title">联系我们</h2>
       <div class="card contact">
         <p>QQ群：<b>123456789</b></p>
@@ -139,12 +151,8 @@
     <p>© 2025 山海工坊 · MYCRAFT · Powered by GitHub Pages</p>
   </footer>
 
-  <!-- 业务脚本 -->
   <script src="main.js"></script>
-
-  <!-- 辅助：无障碍隐藏文本类 -->
-  <style>
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  </style>
+  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
 </body>
 </html>
+
